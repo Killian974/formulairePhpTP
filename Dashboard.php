@@ -1,5 +1,7 @@
 <?php
-<html lang="fr">
+
+// début_html
+<html>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport"
@@ -32,4 +34,5 @@
 </table>
 </body>
 </html>
+
 
