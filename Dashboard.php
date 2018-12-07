@@ -1,14 +1,5 @@
 <?php
-
-// 1 Créer une connnexion à la bdd
-try{
-  $host='localhost';
-  $port='3306';
-  $database='coursPhpObjet';
-  $listeContact = array();
-
-  
-  class listeContact {
+class listeContact {
   
       private $prenomContact;
       private $nomContact;
@@ -19,12 +10,42 @@ try{
           $this->nomContact = $nomContact;
           $this->emailContact = $emailContact;
       }
+
+      public function setPrenomContact($pPrenomContact){
+        $this->prenomContact = $pPrenomContact;
+    }
+    
+    public function getPrenomContact() {
+        return $this->prenomContact;
+    }
+
+    public function setNomContact($pNomContact){
+      $this->nomContact = $pnomContact;
   }
+  
+  public function getNomContact() {
+      return $this->nomContact;
+  }
+
+  public function setEmailContact($pEmailContact){
+    $this->emailContact = $pEmailContact;
+}
+
+public function getEmailContact() {
+    return $this->emailContact;
+}
+  }
+// 1 Créer une connnexion à la bdd
+try{
+  $host='localhost';
+  $port='3306';
+  $database='coursPhpObjet';
+  $listeContact = array();
   
   $pdo = new PDO ("mysql:host=$host;port=$port;dbname=$database",'root','' ) ;
   $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
   
-$pdo-> exec("INSERT INTO clients (firstname,lastname) VALUES ('John', 'Doe')");
+$pdo->exec("INSERT INTO ajoutContact(prenomContact,nomContact, emailAdresse) VALUES ($prenomContact, $nomContact, $emailContact)");
   // var_dump("Le dernier ID est :".$pdo->lastInsertId() );
 // $stmt = $pdo ->query("SELECT * FROM clients;"); 
   
@@ -33,9 +54,9 @@ $pdo-> exec("INSERT INTO clients (firstname,lastname) VALUES ('John', 'Doe')");
 // 3 Extraire les données (fetch())
 while(($row = $stmt->fetch(PDO::FETCH_ASSOC)) !== false){
   $client = new contact(
-      $row['prenom'],
-      $row['firstname'],
-      $row['lastname']
+      $row['prenomContact'],
+      $row['nomContact'],
+      $row['emailContact']
   );
 // 4 Créer une instance d'une classe de type Contact
 
@@ -46,8 +67,7 @@ while(($row = $stmt->fetch(PDO::FETCH_ASSOC)) !== false){
 $listeContact[] = $contact;
 }
 
-?><!doctype html>
-<html lang="fr">
+?><html lang="fr">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -90,6 +110,7 @@ $listeContact[] = $contact;
         </form>
       </div>
     </nav>
+    
 
     
 
@@ -108,8 +129,8 @@ $listeContact[] = $contact;
         <?php foreach($listContacts as $contact): ?>
         <div class="media text-muted pt-3">
           <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
-            <strong class="d-block text-gray-dark"><?php echo $contact->getFirsname() ?> <?php echo $contact->getLastname() ?></strong>
-            <?php echo $contact->getEmail() ?>
+            <strong class="d-block text-gray-dark"><?php echo $contact->getPrenomContact() ?> <?php echo $contact->getNomContact() ?></strong>
+            <?php echo $contact->getEmailContacts() ?>
           </p>
         </div>
         <?php endforeach ?>
@@ -119,29 +140,26 @@ $listeContact[] = $contact;
         </small>
       </div>
 
+      <form action="formDashboard.php" method="POST">
 
-   
-<form action="formDashboard.php" method="POST">
-<div class="row">
               <div class="col-md-6 mb-3">
                 <label for="firstName">Prénom</label>
                 <input type="text" class="form-control" name="prenomContact" id="prenomContact" placeholder="" value="" required>
                 <div class="invalid-feedback">
                   Prénom valide requis 
                 </div>
-              </div>
+                </div>
               <div class="col-md-6 mb-3">
                 <label for="lastName">Nom</label>
-                <input type="text" class="form-control" name="nomContact" id="lastName" placeholder="" value="" required>
+                <input type="text" class="form-control" name="nomContact" id="lastName" required>
                 <div class="invalid-feedback">
                   Nom valide requis 
                 </div>
               </div>
             </div>
-
-            <div class="mb-2  ">
+            <div class="mb-2 ">
               <label for="address">E-mail du contact</label>
-              <input type="text" class="form-control" name="emailContact"id="address"value="sdfghjk@dfghjkl.fg" placeholder="azertyuiop@gmail.com" required>
+              <input type="text" class="form-control" name="emailContact" id="address" value="sdfghjk@dfghjkl.fg" placeholder="azertyuiop@gmail.com" required>
               <div class="invalid-feedback">
                Veuillez entrez une adresse email valide svp
               </div>
@@ -149,15 +167,8 @@ $listeContact[] = $contact;
 
             <hr class="mb-4">
             <button class="btn btn-primary btn-lg btn-block" type="submit">Ajoutez le contact !</button>
-</form>
+      </form>
 
 
-
-
-
-   
   </body>
 </html>
-
-
-
