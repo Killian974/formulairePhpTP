@@ -1,5 +1,53 @@
-<!doctype html>
-<html lang="en">
+<?php
+
+// 1 Créer une connnexion à la bdd
+try{
+  $host='localhost';
+  $port='3306';
+  $database='coursPhpObjet';
+  $listeContact = array();
+
+  
+  class listeContact {
+  
+      private $prenomContact;
+      private $nomContact;
+      private $emailContact;
+  
+      public function __construct(string $prenomContact, string $nomContact, string $emailContact) {
+          $this->prenomContact = $prenomContact;
+          $this->nomContact = $nomContact;
+          $this->emailContact = $emailContact;
+      }
+  }
+  
+  $pdo = new PDO ("mysql:host=$host;port=$port;dbname=$database",'root','' ) ;
+  $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+  
+$pdo-> exec("INSERT INTO clients (firstname,lastname) VALUES ('John', 'Doe')");
+  // var_dump("Le dernier ID est :".$pdo->lastInsertId() );
+// $stmt = $pdo ->query("SELECT * FROM clients;"); 
+  
+  // var_dump($stmt->fetchObject);
+  
+// 3 Extraire les données (fetch())
+while(($row = $stmt->fetch(PDO::FETCH_ASSOC)) !== false){
+  $client = new contact(
+      $row['prenom'],
+      $row['firstname'],
+      $row['lastname']
+  );
+// 4 Créer une instance d'une classe de type Contact
+
+
+
+// 5 Mettre l'objet contact dans une variable de liste de contacts ($listContacts)
+
+$listeContact[] = $contact;
+}
+
+?><!doctype html>
+<html lang="fr">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -7,7 +55,7 @@
     <meta name="author" content="">
     <link rel="icon" href="../../../../favicon.ico">
 
-    <title>Offcanvas template for Bootstrap</title>
+    <title>Contact</title>
 
     <!-- Bootstrap core CSS -->
     <link href="dashboard.css" rel="stylesheet">
@@ -19,7 +67,7 @@
   <body class="bg-light">
 
     <nav class="navbar navbar-expand-lg fixed-top navbar-dark bg-dark">
-      <a class="navbar-brand mr-auto mr-lg-0" href="#">Acceder à notre menu ici !</a>
+      <a class="navbar-brand mr-auto mr-lg-0" href="#">Contact&Co</a>
       <button class="navbar-toggler p-0 border-0" type="button" data-toggle="offcanvas">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -55,42 +103,59 @@
       </div>
 
       <div class="my-3 p-3 bg-white rounded shadow-sm">
-        <h6 class="border-bottom border-gray pb-2 mb-0" style="texte-align:center;">Salut "identifiant" ! Voici tous t'es contact ci dessous :</h6>
+        <h6 class="border-bottom border-gray pb-2 mb-0" style="texte-align:center;">Salut "identifiant" ! Voici tous tes contacts ci-dessous :</h6>
+        
+        <?php foreach($listContacts as $contact): ?>
         <div class="media text-muted pt-3">
-          <img data-src="holder.js/32x32?theme=thumb&bg=007bff&fg=007bff&size=1" alt="" class="mr-2 rounded">
           <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
-            <strong class="d-block text-gray-dark">@username</strong>
-            Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.
+            <strong class="d-block text-gray-dark"><?php echo $contact->getFirsname() ?> <?php echo $contact->getLastname() ?></strong>
+            <?php echo $contact->getEmail() ?>
           </p>
         </div>
-        <div class="media text-muted pt-3">
-          <img data-src="holder.js/32x32?theme=thumb&bg=e83e8c&fg=e83e8c&size=1" alt="" class="mr-2 rounded">
-          <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
-            <strong class="d-block text-gray-dark">@username</strong>
-            Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.
-          </p>
-        </div>
-        <div class="media text-muted pt-3">
-          <img data-src="holder.js/32x32?theme=thumb&bg=6f42c1&fg=6f42c1&size=1" alt="" class="mr-2 rounded">
-          <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
-            <strong class="d-block text-gray-dark">@username</strong>
-            Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.
-          </p>
-        </div>
+        <?php endforeach ?>
+     
         <small class="d-block text-right mt-3">
           <a href="#">Voir tous nos contacts</a>
         </small>
       </div>
 
-    <!-- Bootstrap core JavaScript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery-slim.min.js"><\/script>')</script>
-    <script src="../../assets/js/vendor/popper.min.js"></script>
-    <script src="../../dist/js/bootstrap.min.js"></script>
-    <script src="../../assets/js/vendor/holder.min.js"></script>
-    <script src="offcanvas.js"></script>
+
+   
+<form action="formDashboard.php" method="POST">
+<div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="firstName">Prénom</label>
+                <input type="text" class="form-control" name="prenomContact" id="prenomContact" placeholder="" value="" required>
+                <div class="invalid-feedback">
+                  Prénom valide requis 
+                </div>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="lastName">Nom</label>
+                <input type="text" class="form-control" name="nomContact" id="lastName" placeholder="" value="" required>
+                <div class="invalid-feedback">
+                  Nom valide requis 
+                </div>
+              </div>
+            </div>
+
+            <div class="mb-2  ">
+              <label for="address">E-mail du contact</label>
+              <input type="text" class="form-control" name="emailContact"id="address"value="sdfghjk@dfghjkl.fg" placeholder="azertyuiop@gmail.com" required>
+              <div class="invalid-feedback">
+               Veuillez entrez une adresse email valide svp
+              </div>
+            </div>
+
+            <hr class="mb-4">
+            <button class="btn btn-primary btn-lg btn-block" type="submit">Ajoutez le contact !</button>
+</form>
+
+
+
+
+
+   
   </body>
 </html>
 
